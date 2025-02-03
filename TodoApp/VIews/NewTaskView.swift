@@ -12,6 +12,7 @@ struct NewTaskView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var description = ""
+    @State private var dueDate = Date()
     @State private var isCompleted = false
     
     var itemsCount: Int
@@ -20,6 +21,7 @@ struct NewTaskView: View {
         NavigationStack {
             Form {
                 TextField("What to do?", text: $description)
+                DatePicker("Due Date", selection: $dueDate, displayedComponents: [.date])
             }
             .navigationTitle("New Task")
             .toolbar {
@@ -29,7 +31,7 @@ struct NewTaskView: View {
                 
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     Button("Save") {
-                        let newTask = Task(index: itemsCount, taskDesc: description, isCompleted: isCompleted)
+                        let newTask = Task(index: itemsCount, taskDesc: description, dueDate: dueDate, isCompleted: isCompleted)
                         context.insert(newTask)
                         dismiss()
                     }

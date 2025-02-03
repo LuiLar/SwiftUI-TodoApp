@@ -12,15 +12,15 @@ struct TaskItemView: View {
     var isEditMode: Bool?
 
     var body: some View {
-        let _ = print(self.isEditMode)
-
         HStack {
             Image(systemName: data.isCompleted ? "checkmark.circle.fill" : "circle")
                 .foregroundStyle(Color.accentColor)
                 .frame(width: 30, alignment: .leading)
                 .onTapGesture { data.updateTask() }
             
-            if isEditMode == false {
+            if isEditMode == true {
+                TextField("What to do?", text: $data.taskDesc)
+            } else {
                 if data.isCompleted {
                     Text(data.taskDesc)
                         .foregroundStyle(.gray)
@@ -28,18 +28,23 @@ struct TaskItemView: View {
                 } else {
                     Text(data.taskDesc)
                 }
-            } else {
-                TextField("What to do?", text: $data.taskDesc)
             }
-
+            
             Spacer()
+
+            if isEditMode == true {
+                DatePicker("", selection: $data.dueDate, displayedComponents: [.date])
+            } else {
+                Text("\(data.getRemainingDays()) days to go")
+                    .font(.footnote)
+            }
         }
     }
 }
 
 #Preview(traits: .sizeThatFitsLayout) {
-    let previewCompletedTask = Task(index: 0, taskDesc: "Preview this completed task", isCompleted: true)
-    let previewNonCompletedTask = Task(index: 1, taskDesc: "Preview this non completed task", isCompleted: false)
+    let previewCompletedTask = Task(index: 0, taskDesc: "Preview this completed task", dueDate: .now, isCompleted: true)
+    let previewNonCompletedTask = Task(index: 1, taskDesc: "Preview this non completed task", dueDate: .now, isCompleted: false)
 
     return List {
         TaskItemView(data: previewCompletedTask)
